@@ -10,4 +10,4 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    projects: 'Dictator_Tests\*_Tests.csproj'
+    projects: 'Dictator_Tests/*_Tests.csproj'
