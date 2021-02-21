@@ -3,15 +3,30 @@ using System.Collections.Generic;
 
 namespace Dictator
 {
-    public class Parser : IParser
+    public static class Parser<T> where T : class, new()
     {
-        private IDictionary<string,object> _dictonaryToParse { get; set; }
 
-        public IList<T> Parse<T>(IDictionary<string, object> dictonaryToParse) where T : new()
+        public static IList<T> Parse(Dictionary<string, T> dictonaryToParse) 
         {
-            _dictonaryToParse = dictonaryToParse ?? throw new ArgumentNullException(nameof(dictonaryToParse));
-            List<T> result = new List<T>();
+            if (dictonaryToParse is null)
+            {
+                throw new ArgumentNullException(nameof(dictonaryToParse));
+            }
 
+            IList<T> result = new List<T>();
+
+            foreach (KeyValuePair<string,T> instance in dictonaryToParse)
+            {
+
+                instance
+                    .Value
+                    .GetType()
+                    .GetProperty("Name") //TODO this should be some Attribute
+                    .SetValue(instance.Value, instance.Key);
+                result.Add(instance.Value);
+            }
+
+            
             return result;
 
         }

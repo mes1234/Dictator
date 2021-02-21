@@ -10,8 +10,7 @@ namespace Dictator_Tests
         [Fact]
         public void CheckNullDictThrows()
         {
-            Parser parser = new Parser();
-            Assert.Throws<ArgumentNullException>(() => parser.Parse<object>(null));
+            Assert.Throws<ArgumentNullException>(() => Parser<object>.Parse(null));
         }
     }
 }
