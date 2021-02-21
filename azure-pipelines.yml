@@ -1,0 +1,9 @@
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'Dictator/Dictator.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'Dictator_Tests\*_Tests.csproj'
