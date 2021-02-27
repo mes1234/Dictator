@@ -1,3 +1,6 @@
+variables:
+  buildConfiguration: Release
+
 pool:
   vmImage: 'ubuntu-18.04' 
 
@@ -6,8 +9,23 @@ steps:
   inputs:
     command: 'build'
     projects: 'Dictator/Dictator.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
     projects: 'Dictator_Tests/*_Tests.csproj'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+
+
+- script: |
+    dotnet tool install -g dotnet-reportgenerator-globaltool
+    reportgenerator -reports:$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura
+
+- task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage Angular results'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml'
+      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+      failIfCoverageEmpty: true
