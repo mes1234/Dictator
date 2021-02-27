@@ -12,10 +12,11 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: 'Dictator_Tests/*_Tests.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+  displayName: 'Running code coverage'
+  inputs: 
+      command: test
+      projects: 'Dictator_Tests/*_Tests.csproj'
+      arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/CodeCoverage'
 
 
 - task: DotNetCoreCLI@2
