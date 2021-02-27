@@ -12,12 +12,12 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Running code coverage'
-  inputs: 
-      command: test
-      projects: 'Dictator_Tests/*_Tests.csproj'
-      arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-
+  displayName: 'dotnet test'
+  inputs:
+        command: 'test'
+        projects: 'Dictator_Tests/*_Tests.csproj'
+        arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
+        publishTestResults: true
 
 - task: DotNetCoreCLI@2
   displayName: Install ReportGenerator Global Tool
@@ -33,8 +33,8 @@ steps:
     reportgenerator -reports:$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:"HtmlInline_AzurePipelines;Cobertura"
 
 - task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage Results'
   inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
-      failIfCoverageEmpty: true
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Build.SourcesDirectory)/**/MyCoverage/coverage.cobertura.xml'
+        failIfCoverageEmpty: true
