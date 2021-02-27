@@ -29,7 +29,7 @@ steps:
     echo "##vso[task.prependpath]$HOME/.dotnet/tools"
 
 - script: 
-    reportgenerator -reports:$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+    reportgenerator -reports:$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
 
 - task: PublishCodeCoverageResults@1
   inputs:
