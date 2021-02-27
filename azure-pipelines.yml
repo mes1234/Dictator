@@ -19,18 +19,18 @@ steps:
         arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
         publishTestResults: true
 
-- task: DotNetCoreCLI@2
-  displayName: Install ReportGenerator Global Tool
-  inputs:
-      command: custom
-      custom: tool
-      arguments: install dotnet-reportgenerator-globaltool -g
+# - task: DotNetCoreCLI@2
+#   displayName: Install ReportGenerator Global Tool
+#   inputs:
+#       command: custom
+#       custom: tool
+#       arguments: install dotnet-reportgenerator-globaltool -g
 
-- script: 
-    echo "##vso[task.prependpath]$HOME/.dotnet/tools"
+# - script: 
+#     echo "##vso[task.prependpath]$HOME/.dotnet/tools"
 
-- script: 
-    reportgenerator -reports:$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/MyCoverage -reporttypes:"HtmlInline_AzurePipelines;Cobertura"
+# - script: 
+#     reportgenerator -reports:$(Build.SourcesDirectory)/Dictator_Tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/MyCoverage -reporttypes:"HtmlInline_AzurePipelines;Cobertura"
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish Code Coverage Results'
