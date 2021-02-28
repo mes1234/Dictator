@@ -2,50 +2,37 @@ using System;
 using Xunit;
 using Dictator;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Dictator_Tests
 {
+    
+
     public class FunctionalTests
     {
-        class myInternalClass
+        
+        [Theory]
+        [ClassData(typeof(PropClassDataTest))]
+        public void CheckSimpleDictionary(Dictionary<string, JsonDictClass> testDict)
         {
-          public  int PropA { get; set; }
-          public  int PropB { get; set; }
-        }
+            var result= Parser.Parse<JsonDictClass, StronglyTypedObjects>(testDict);
 
-        class myInternalClassFull : myInternalClass
-        {
-            public string Name { get; set; }
-        }
-
-        [Fact]
-        public void CheckSimpleDictionary()
-        {
-
-            Dictionary<string, myInternalClassFull> testDict = new Dictionary<string, myInternalClassFull>()
-            {
-                { 
-                    "item1" , new myInternalClassFull()
-                    {
-                        PropA =10,
-                        PropB=11
-                    }
-                },
-                { 
-                    "item2" , new myInternalClassFull()
-                    {
-                        PropA =10,
-                        PropB=11
-                    }
-                }
-            };
-            IList<myInternalClassFull> result= Parser<myInternalClassFull>.Parse(testDict);
-
-            foreach(myInternalClassFull myInternal in result)
+            foreach(StronglyTypedObjects myInternal in result)
             {
                 Assert.NotNull(myInternal.Name);
             }
+        }       
+        
+        [Theory]
+        [ClassData(typeof(PropClassDataTest))]
+        public void CheckSimpleDictionaryWithNotCompliantDestClass(Dictionary<string, JsonDictClass> testDict)
+        {
+            var result= Parser.Parse<JsonDictClass, StonglyTypedObjectNotCompliant>(testDict);
 
+            foreach(StonglyTypedObjectNotCompliant myInternal in result)
+            {
+                Assert.NotNull(myInternal.Name);
+            }
         }
     }
 }
