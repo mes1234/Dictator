@@ -3,7 +3,7 @@ using Xunit;
 using Dictator;
 using System.Collections.Generic;
 using System.Collections;
-
+using System.Linq;
 
 namespace Dictator_Tests
 {
@@ -100,7 +100,7 @@ namespace Dictator_Tests
                 new ParsedJsonWithDict()
                 {
                     items =((Func<ICollection>)(() => {
-                        return new ParsedJsonDataTest()  .Select(x => x).ToList();
+                        return new ParsedJsonDataTest().Select(x => x).ToList();
                     }))()
                 }
             };

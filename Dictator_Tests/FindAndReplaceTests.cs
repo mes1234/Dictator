@@ -51,15 +51,11 @@ namespace Dictator_Tests
         public void CheckNestedCollectionOfDictionary(NestedParsedJsonDataTest testDict)
         {
             var result = Parser.FindAndReplace<JsonDictClass, StronglyTypedObjects, NestedParsedJsonDataTest>(testDict);
-      
-            //foreach(var item in result)
-            //{
-            //    foreach (var subitem in item.items)
-            //    {
-            //        Assert.NotNull(subitem.GetType().GetProperty("Name").GetValue(subitem));
-            //    }
-                          
-            //}
+
+            foreach (var item in result)
+            {
+                Assert.NotNull(item.GetType().GetProperty("Name").GetValue(item));
+            }
         }
     }
 }
