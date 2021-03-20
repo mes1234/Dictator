@@ -74,6 +74,16 @@ namespace Dictator
                 throw new ArgumentNullException(nameof(objectToCorrect));
             }
 
+            IEnumerable<object> indexable = objectToCorrect as IEnumerable<object>;
+            if (indexable != null)
+            {
+                foreach(var item in indexable)
+                {
+                    FindAndReplace<T, U, object>(item);
+                }
+                return objectToCorrect;
+            }
+
 
             var props = objectToCorrect.GetType().GetProperties();
 

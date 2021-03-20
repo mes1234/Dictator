@@ -24,7 +24,7 @@ namespace Dictator_Tests
 
         [Theory]
         [ClassData(typeof(ParsedJsonDataTest))]
-        public void CheckNestedDictionary(ParsedJsonWithDict testDict)
+        public void CheckCollectionOfDictionary(ParsedJsonWithDict testDict)
         {
             List<ParsedJsonWithDict> parsedJsonWithDicts = new List<ParsedJsonWithDict>()
             {
@@ -38,8 +38,28 @@ namespace Dictator_Tests
       
             foreach(var item in result)
             {
-                Assert.NotNull(item.GetType().GetProperty("Name").GetValue(item));
+                foreach (var subitem in item.items)
+                {
+                    Assert.NotNull(subitem.GetType().GetProperty("Name").GetValue(subitem));
+                }
+                          
             }
+        }
+
+        [Theory]
+        [ClassData(typeof(NestedParsedJsonDataTest))]
+        public void CheckNestedCollectionOfDictionary(NestedParsedJsonDataTest testDict)
+        {
+            var result = Parser.FindAndReplace<JsonDictClass, StronglyTypedObjects, NestedParsedJsonDataTest>(testDict);
+      
+            //foreach(var item in result)
+            //{
+            //    foreach (var subitem in item.items)
+            //    {
+            //        Assert.NotNull(subitem.GetType().GetProperty("Name").GetValue(subitem));
+            //    }
+                          
+            //}
         }
     }
 }
