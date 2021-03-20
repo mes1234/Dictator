@@ -74,25 +74,29 @@ namespace Dictator
                 throw new ArgumentNullException(nameof(objectToCorrect));
             }
 
-            IEnumerable<object> indexable = objectToCorrect as IEnumerable<object>;
-            if (indexable != null)
-            {
-                foreach(var item in indexable)
-                {
-                    FindAndReplace<T, U, object>(item);
-                }
-                return objectToCorrect;
-            }
+            var intermidate = (V)TryWithCollection<T, U>(objectToCorrect);
+
+            if (intermidate != null)
+                return intermidate;
 
 
             var props = objectToCorrect.GetType().GetProperties();
 
             foreach (var prop in props)
             {
+                TryWithCollection<T, U>(objectToCorrect
+                    .GetType()
+                    .GetProperty(prop.Name)
+                    .GetValue(objectToCorrect));
+
+          
                 Dictionary<string, T> propToChange = objectToCorrect
                     .GetType()
                     .GetProperty(prop.Name)
                     .GetValue(objectToCorrect) as Dictionary<string, T>;
+
+
+
                 if (propToChange != null)
                 {
                     IDictionary<string, T> dictToPars = (IDictionary<string, T>)propToChange;
@@ -105,6 +109,22 @@ namespace Dictator
             }
 
             return objectToCorrect;
+        }
+
+        private static object TryWithCollection<T,U> (object objectToCorrect)
+            where T : class, new() // Source Type
+            where U : class, new() // Destination Type
+        {
+            IEnumerable<object> indexable = objectToCorrect as IEnumerable<object>;
+            if (indexable != null)
+            {
+                foreach (var item in indexable)
+                {
+                    FindAndReplace<T, U, object>(item);
+                }
+                return objectToCorrect;
+            }
+            return null;
         }
     }
 }
