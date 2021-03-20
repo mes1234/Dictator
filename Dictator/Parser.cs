@@ -64,7 +64,7 @@ namespace Dictator
         /// <typeparam name="V">External</typeparam>
         /// <param name="objectToCorrect"></param>
         /// <returns></returns>
-        public static V FindAndReplace<T,U,V>(V objectToCorrect)
+        public static object FindAndReplace<T,U,V>(object objectToCorrect)
             where T : class, new() // Source Type
             where U : class, new() // Destination Type
             where V : class, new() // External Type
@@ -79,6 +79,15 @@ namespace Dictator
 
             foreach (var prop in props)
             {
+
+                //Check if recursion is deep enough
+                var propVal = objectToCorrect
+                    .GetType()
+                    .GetProperty(prop.Name)
+                    .GetValue(objectToCorrect);
+
+                Parser.FindAndReplace<T,U,V>(propVal);
+
                 Dictionary<string, T> propToChange = objectToCorrect
                     .GetType()
                     .GetProperty(prop.Name)

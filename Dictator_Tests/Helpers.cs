@@ -3,6 +3,7 @@ using Xunit;
 using Dictator;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 namespace Dictator_Tests
 {
@@ -58,7 +59,6 @@ namespace Dictator_Tests
        public ICollection items { get; set; }
     }
 
-
     public class ParsedJsonDataTest : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
@@ -91,4 +91,21 @@ namespace Dictator_Tests
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
+    public class NestedParsedJsonDataTest : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[]
+            {
+                new ParsedJsonWithDict()
+                {
+                    items =((Func<ICollection>)(() => {
+                        return new ParsedJsonDataTest().Select(x => x).ToList();
+                    }))()
+                }
+            };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 }
